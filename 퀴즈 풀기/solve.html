@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 사이트</title>
+  <link rel="stylesheet" href="solve.css">
+</head>
+<body>
+  <div style="text-align: center;">
+    <h1>Quiz</h1>
+  </div>
+  
+  <div id="quizListContainer" style="text-align: center;">
+    <h2>퀴즈 목록</h2>
+    <ul id="quizList" style="list-style: none; padding: 0;">
+      <!-- 퀴즈 이름이 여기에 추가됩니다 -->
+    </ul>
+    <button id="addQuizPageBtn">추가</button>
+  </div>
+
+  <div id="quizFormContainer" style="display: none;">
+    <h2 style="text-align: center;">추가</h2>
+    <form id="quizForm" style="text-align: center;">
+      <div>
+        <label>퀴즈 이름: <input type="text" id="quizName" placeholder="퀴즈 이름 입력" required></label>
+      </div>
+      <div>
+        <label>질문: <input type="text" id="quizQuestion" placeholder="질문 입력" required></label>
+      </div>
+      <div id="optionsContainer" style="margin-top: 10px; text-align: left; margin-left: 30%; width: 40%;">
+        <p>선택지를 입력하세요:</p>
+        
+        <!-- 선택지 입력 필드 (동적으로 생성됨) -->
+        <div class="optionGroup" id="option1">
+          <label for="option1">①: </label>
+          <input type="text" id="option1Input" placeholder="선택지 1" class="optionInput" required>
+          <input type="radio" name="correctAnswer" value="1"> 정답
+        </div>
+        <div class="optionGroup" id="option2">
+          <label for="option2">②: </label>
+          <input type="text" id="option2Input" placeholder="선택지 2" class="optionInput" required>
+          <input type="radio" name="correctAnswer" value="2"> 정답
+        </div>
+        <div class="optionGroup" id="option3">
+          <label for="option3">③: </label>
+          <input type="text" id="option3Input" placeholder="선택지 3" class="optionInput" required>
+          <input type="radio" name="correctAnswer" value="3"> 정답
+        </div>
+        <div class="optionGroup" id="option4">
+          <label for="option4">④: </label>
+          <input type="text" id="option4Input" placeholder="선택지 4" class="optionInput" required>
+          <input type="radio" name="correctAnswer" value="4"> 정답
+        </div>
+        <div class="optionGroup" id="option5">
+          <label for="option5">⑤: </label>
+          <input type="text" id="option5Input" placeholder="선택지 5" class="optionInput" required>
+          <input type="radio" name="correctAnswer" value="5"> 정답
+        </div>
+      </div>
+      <button type="submit" style="margin-top: 10px;">퀴즈 저장</button>
+      <button type="button" id="cancelQuizBtn" style="margin-top: 10px;">취소</button>
+    </form>
+  </div>
+
+  <script src="solve.js"></script>
+</body>
+</html>

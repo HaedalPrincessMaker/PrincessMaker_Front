@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 생성</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>퀴즈 생성</h1>
+  <form id="quizForm">
+    <div>
+      <label for="quizQuestion">문제:</label>
+      <input type="text" id="quizQuestion" required>
+    </div>
+    <div>
+      <label for="option1Input">1번 선택지:</label>
+      <input type="text" id="option1Input" required>
+    </div>
+    <div>
+      <label for="option2Input">2번 선택지:</label>
+      <input type="text" id="option2Input" required>
+    </div>
+    <div>
+      <label for="option3Input">3번 선택지:</label>
+      <input type="text" id="option3Input" required>
+    </div>
+    <div>
+      <label for="option4Input">4번 선택지:</label>
+      <input type="text" id="option4Input" required>
+    </div>
+    <div>
+      <label for="option5Input">5번 선택지:</label>
+      <input type="text" id="option5Input" required>
+    </div>
+    <div>
+      <label for="correctAnswer">정답:</label>
+      <select id="correctAnswer">
+        <option value="1">1번</option>
+        <option value="2">2번</option>
+        <option value="3">3번</option>
+        <option value="4">4번</option>
+        <option value="5">5번</option>
+      </select>
+    </div>
+    <button type="submit">퀴즈 추가</button>
+  </form>
+
+  <script>
+    // 퀴즈 저장 이벤트
+    const quizForm = document.getElementById('quizForm');
+    
+    quizForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // 입력값 가져오기
+      const quizQuestion = document.getElementById('quizQuestion').value.trim();
+      const options = [
+        document.getElementById('option1Input').value.trim(),
+        document.getElementById('option2Input').value.trim(),
+        document.getElementById('option3Input').value.trim(),
+        document.getElementById('option4Input').value.trim(),
+        document.getElementById('option5Input').value.trim()
+      ];
+
+      const correctAnswer = document.getElementById('correctAnswer').value;
+
+      // 새로운 퀴즈 객체 생성
+      const newQuiz = {
+        question: quizQuestion,
+        options: options,
+        correctAnswer: correctAnswer
+      };
+
+      // 기존 퀴즈 목록 가져오기
+      let quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+      
+      // 새 퀴즈 추가
+      quizzes.push(newQuiz);
+      
+      // 업데이트된 퀴즈 목록을 localStorage에 저장
+      localStorage.setItem('quizzes', JSON.stringify(quizzes));
+
+      // 폼 초기화 후 목록 페이지로 이동
+      quizForm.reset();
+      window.location.href = 'quizList.html'; // 퀴즈 목록 페이지로 이동
+    });
+  </script>
+</body>
+</html>

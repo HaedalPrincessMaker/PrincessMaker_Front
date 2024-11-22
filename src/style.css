@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  button {
+    padding: 12px 25px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    color: red;
+    font-weight: bold;
+    margin: 20px 0;
+    font-size: 18px;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .options {
+    margin: 20px 0;
+  }
+  
+  label {
+    margin: 10px;
+    font-size: 16px;
+  }
+
+  #quizListContainer {
+    display: block; /* 기본적으로 퀴즈 목록 보이기 */
+  }
+  
+  #quizFormContainer {
+    display: none; /* 기본적으로 퀴즈 추가 페이지 숨기기 */
+  }
+  
+  

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 목록</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div style="text-align: center;">
+    <h1>Quiz</h1>
+  </div>
+  
+  <div id="quizListContainer" style="text-align: center;">
+    <h2>퀴즈 목록</h2>
+    <ul id="quizList" style="list-style: none; padding: 0;">
+      <!-- 퀴즈 목록이 여기에 추가됩니다 -->
+    </ul>
+    <button id="addQuizPageBtn" onclick="location.href='quizFormPage.html'">추가</button>
+  </div>
+
+  <script>
+    // 퀴즈 목록 업데이트 함수
+    function updateQuizList() {
+      const quizList = document.getElementById('quizList');
+      quizList.innerHTML = '';
+
+      const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+      quizzes.forEach((quiz, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = quiz.question; // 퀴즈 질문을 표시
+        listItem.addEventListener('click', () => {
+          // 퀴즈 정보를 localStorage에 저장
+          localStorage.setItem('selectedQuiz', JSON.stringify(quiz));
+          // 퀴즈 풀기 페이지로 이동
+          window.location.href = 'quizPage.html';
+        });
+        quizList.appendChild(listItem);
+      });
+    }
+
+    // 페이지 로드시 퀴즈 목록 업데이트
+    window.onload = function() {
+      updateQuizList();
+    };
+  </script>
+</body>
+</html>

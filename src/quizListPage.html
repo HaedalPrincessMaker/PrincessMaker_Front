@@ -4,45 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>퀴즈 목록</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div style="text-align: center;">
-    <h1>Quiz</h1>
+    <h1>Quiz 목록</h1>
   </div>
-  
+
   <div id="quizListContainer" style="text-align: center;">
     <h2>퀴즈 목록</h2>
     <ul id="quizList" style="list-style: none; padding: 0;">
       <!-- 퀴즈 목록이 여기에 추가됩니다 -->
     </ul>
-    <button id="addQuizPageBtn" onclick="location.href='quizFormPage.html'">추가</button>
+    <button onclick="location.href='quizForm.html'">퀴즈 추가</button>
   </div>
 
   <script>
-    // 퀴즈 목록 업데이트 함수
-    function updateQuizList() {
+    // 서버에서 퀴즈 목록을 가져오는 함수
+    async function fetchQuizzes() {
+      const response = await fetch('/api/quizzes'); // API 호출
+      const quizzes = await response.json();
       const quizList = document.getElementById('quizList');
-      quizList.innerHTML = '';
 
-      const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
-      quizzes.forEach((quiz, index) => {
+      quizList.innerHTML = ''; // 기존 목록 초기화
+
+      // 퀴즈 목록을 동적으로 생성
+      quizzes.forEach(quiz => {
         const listItem = document.createElement('li');
-        listItem.textContent = quiz.question; // 퀴즈 질문을 표시
-        listItem.addEventListener('click', () => {
-          // 퀴즈 정보를 localStorage에 저장
-          localStorage.setItem('selectedQuiz', JSON.stringify(quiz));
-          // 퀴즈 풀기 페이지로 이동
-          window.location.href = 'quizPage.html';
-        });
+        listItem.innerHTML = `
+          ${quiz.question} 
+          <button onclick="editQuiz(${quiz.id})">수정</button>
+          <button onclick="deleteQuiz(${quiz.id})">삭제</button>
+        `;
         quizList.appendChild(listItem);
       });
     }
 
-    // 페이지 로드시 퀴즈 목록 업데이트
-    window.onload = function() {
-      updateQuizList();
-    };
+    // 퀴즈 수정 페이지로 이동
+    function editQuiz(id) {
+      localStorage.setItem('selectedQuizId', id);
+      window.location.href = 'quizEdit.html';
+    }
+
+    // 퀴즈 삭제
+    async function deleteQuiz(id) {
+      if (confirm('정말로 삭제하시겠습니까?')) {
+        const response = await fetch(`/api/quizzes/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('퀴즈가 삭제되었습니다.');
+          fetchQuizzes(); // 목록 다시 불러오기
+        } else {
+          alert('퀴즈 삭제 실패');
+        }
+      }
+    }
+
+    // 페이지 로드 시 퀴즈 목록 업데이트
+    window.onload = fetchQuizzes;
   </script>
 </body>
 </html>

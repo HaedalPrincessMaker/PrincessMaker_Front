@@ -4,49 +4,67 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>퀴즈 도전</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .options {
+      margin: 20px 0;
+    }
+    label {
+      margin: 10px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
   <h1>퀴즈 도전</h1>
-  <p id="quizQuestion">문제:</p>
+  <p id="question">문제를 불러오는 중...</p>
   <form id="quizForm">
-    <div class="options" id="quizOptions">
-      <!-- 동적으로 선택지가 채워질 부분 -->
+    <div class="options" id="options">
+     
     </div>
     <button type="button" onclick="submitAnswer()">제출</button>
   </form>
-  <p class="message hidden" id="feedback">실패! 기회는 1번 남았습니다.</p>
-  <button class="hidden" id="retryButton" onclick="retry()">다시 도전하기</button>
+  <p class="hidden" id="feedback">틀렸습니다! 기회는 <span id="attemptsLeft"></span>번 남았습니다.</p>
 
   <script>
     let attempts = 2; // 최대 시도 횟수
-    let correctAnswer; // 정답
-    const quizQuestion = document.getElementById('quizQuestion');
-    const quizOptions = document.getElementById('quizOptions');
+    const quizId = localStorage.getItem('selectedQuizId'); // 선택한 퀴즈 ID 저장
 
-    // 페이지 로드시 localStorage에서 퀴즈 정보 가져오기
-    window.onload = function() {
-      const selectedQuiz = JSON.parse(localStorage.getItem('selectedQuiz'));
+    // 페이지 로드 시 퀴즈 데이터 가져오기
+    window.onload = async function () {
+      try {
+        const response = await fetch(`/quiz/${quizId}`);
+        const quiz = await response.json();
 
-      if (selectedQuiz) {
-        quizQuestion.textContent = `문제: ${selectedQuiz.question}`;
-        correctAnswer = selectedQuiz.correctAnswer;
-
-        // 선택지 동적으로 생성
-        selectedQuiz.options.forEach((option, index) => {
-          const optionLabel = document.createElement('label');
-          optionLabel.innerHTML = `
-            <input type="radio" name="answer" value="${index + 1}"> ${index + 1}. ${option}
-          `;
-          quizOptions.appendChild(optionLabel);
-          quizOptions.appendChild(document.createElement('br'));
+        // 문제와 선택지 설정
+        document.getElementById('question').textContent = quiz.question;
+        const optionsContainer = document.getElementById('options');
+        quiz.options.forEach((option, index) => {
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="radio" name="answer" value="${index + 1}"> ${option}`;
+          optionsContainer.appendChild(label);
+          optionsContainer.appendChild(document.createElement('br'));
         });
-      } else {
-        alert("퀴즈 데이터를 불러올 수 없습니다.");
+      } catch (error) {
+        alert("퀴즈 데이터를 불러오는데 실패했습니다.");
+        console.error("Error loading quiz:", error);
       }
     };
 
-    function submitAnswer() {
+    // 정답 제출
+    async function submitAnswer() {
       const selectedAnswer = document.querySelector('input[name="answer"]:checked');
 
       if (!selectedAnswer) {
@@ -54,33 +72,31 @@
         return;
       }
 
-      if (selectedAnswer.value === correctAnswer) {
-        alert("정답입니다! 축하합니다!");
-        resetQuiz();  // 정답 시 퀴즈 목록 페이지로 이동
-      } else {
-        attempts--;
-        if (attempts > 0) {
-          document.getElementById('feedback').classList.remove('hidden');
-          document.getElementById('retryButton').classList.remove('hidden');
+      try {
+        const response = await fetch(`/quiz/check/${quizId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answer: selectedAnswer.value }),
+        });
+        const result = await response.json();
+
+        if (result.correct) {
+          alert("정답입니다! 축하합니다!");
+          window.location.href = 'quizListPage.html'; // 퀴즈 목록 페이지로 이동
         } else {
-          alert("실패! 더 이상 기회가 없습니다.");
-          resetQuiz();  // 실패 시 퀴즈 목록 페이지로 이동
+          attempts--;
+          if (attempts > 0) {
+            document.getElementById('feedback').classList.remove('hidden');
+            document.getElementById('attemptsLeft').textContent = attempts;
+          } else {
+            alert("기회를 모두 사용했습니다.");
+            window.location.href = 'wrongPage.html'; // 틀렸을 때 이동
+          }
         }
+      } catch (error) {
+        alert("정답 확인 중 오류가 발생했습니다.");
+        console.error("Error checking answer:", error);
       }
-    }
-
-    function retry() {
-      // 선택 초기화
-      document.querySelector('input[name="answer"]:checked').checked = false;
-      // 실패 후 페이지 이동 (옵션)
-      window.location.href = 'retryPage.html';  // 재시도 페이지로 이동
-    }
-
-    function resetQuiz() {
-      attempts = 2;
-      document.getElementById('feedback').classList.add('hidden');
-      document.getElementById('retryButton').classList.add('hidden');
-      window.location.href = 'quizList.html';  // 퀴즈 목록 페이지로 이동
     }
   </script>
 </body>

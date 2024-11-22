@@ -7,83 +7,81 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>퀴즈 생성</h1>
-  <form id="quizForm">
+  <div style="text-align: center;">
+    <h1>퀴즈 추가</h1>
+  </div>
+  
+  <form id="quizForm" style="text-align: center;">
     <div>
-      <label for="quizQuestion">문제:</label>
-      <input type="text" id="quizQuestion" required>
+      <label for="question">질문:</label>
+      <input type="text" id="question" name="question" required>
     </div>
     <div>
-      <label for="option1Input">1번 선택지:</label>
-      <input type="text" id="option1Input" required>
-    </div>
-    <div>
-      <label for="option2Input">2번 선택지:</label>
-      <input type="text" id="option2Input" required>
-    </div>
-    <div>
-      <label for="option3Input">3번 선택지:</label>
-      <input type="text" id="option3Input" required>
-    </div>
-    <div>
-      <label for="option4Input">4번 선택지:</label>
-      <input type="text" id="option4Input" required>
-    </div>
-    <div>
-      <label for="option5Input">5번 선택지:</label>
-      <input type="text" id="option5Input" required>
-    </div>
-    <div>
-      <label for="correctAnswer">정답:</label>
-      <select id="correctAnswer">
-        <option value="1">1번</option>
-        <option value="2">2번</option>
-        <option value="3">3번</option>
-        <option value="4">4번</option>
-        <option value="5">5번</option>
-      </select>
+      <p>옵션과 정답 선택:</p>
+      <div>
+        <label>
+          옵션 1: <input type="text" id="option1" name="option1" required>
+          <input type="radio" name="correctAnswer" value="1" required> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 2: <input type="text" id="option2" name="option2" required>
+          <input type="radio" name="correctAnswer" value="2"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 3: <input type="text" id="option3" name="option3" required>
+          <input type="radio" name="correctAnswer" value="3"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 4: <input type="text" id="option4" name="option4" required>
+          <input type="radio" name="correctAnswer" value="4"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 5: <input type="text" id="option4" name="option4" required>
+          <input type="radio" name="correctAnswer" value="5"> 정답
+        </label>
+      </div>
     </div>
     <button type="submit">퀴즈 추가</button>
   </form>
 
   <script>
-    // 퀴즈 저장 이벤트
-    const quizForm = document.getElementById('quizForm');
-    
-    quizForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    document.getElementById('quizForm').addEventListener('submit', async function (event) {
+      event.preventDefault(); // 기본 동작 중단
 
-      // 입력값 가져오기
-      const quizQuestion = document.getElementById('quizQuestion').value.trim();
-      const options = [
-        document.getElementById('option1Input').value.trim(),
-        document.getElementById('option2Input').value.trim(),
-        document.getElementById('option3Input').value.trim(),
-        document.getElementById('option4Input').value.trim(),
-        document.getElementById('option5Input').value.trim()
-      ];
-
-      const correctAnswer = document.getElementById('correctAnswer').value;
-
-      // 새로운 퀴즈 객체 생성
-      const newQuiz = {
-        question: quizQuestion,
-        options: options,
-        correctAnswer: correctAnswer
+      // 폼 데이터 수집
+      const quiz = {
+        question: document.getElementById('question').value,
+        options: [
+          document.getElementById('option1').value,
+          document.getElementById('option2').value,
+          document.getElementById('option3').value,
+          document.getElementById('option4').value,
+          document.getElementById('option4').value
+        ],
+        correctAnswer: document.querySelector('input[name="correctAnswer"]:checked').value
       };
 
-      // 기존 퀴즈 목록 가져오기
-      let quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
-      
-      // 새 퀴즈 추가
-      quizzes.push(newQuiz);
-      
-      // 업데이트된 퀴즈 목록을 localStorage에 저장
-      localStorage.setItem('quizzes', JSON.stringify(quizzes));
+      // 서버로 전송
+      const response = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(quiz)
+      });
 
-      // 폼 초기화 후 목록 페이지로 이동
-      quizForm.reset();
-      window.location.href = 'quizList.html'; // 퀴즈 목록 페이지로 이동
+      if (response.ok) {
+        alert('퀴즈가 추가되었습니다!');
+        window.location.href = 'quizListPage.html'; // 퀴즈 목록으로 이동
+      } else {
+        alert('퀴즈 추가 실패!');
+      }
     });
   </script>
 </body>

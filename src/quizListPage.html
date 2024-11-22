@@ -21,7 +21,7 @@
   <script>
     // 서버에서 퀴즈 목록을 가져오는 함수
     async function fetchQuizzes() {
-      const response = await fetch('/api/quizzes'); // API 호출
+      const response = await fetch('/quiz'); // GET /quiz
       const quizzes = await response.json();
       const quizList = document.getElementById('quizList');
 

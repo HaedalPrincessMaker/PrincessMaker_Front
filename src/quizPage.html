@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 도전</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .options {
+      margin: 20px 0;
+    }
+    label {
+      margin: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>퀴즈 도전</h1>
+  <p id="question">문제를 불러오는 중...</p>
+  <form id="quizForm">
+    <div class="options" id="options">
+     
+    </div>
+    <button type="button" onclick="submitAnswer()">제출</button>
+  </form>
+  <p class="hidden" id="feedback">틀렸습니다! 기회는 <span id="attemptsLeft"></span>번 남았습니다.</p>
+
+  <script>
+    let attempts = 2; // 최대 시도 횟수
+    const quizId = localStorage.getItem('selectedQuizId'); // 선택한 퀴즈 ID 저장
+
+    // 페이지 로드 시 퀴즈 데이터 가져오기
+    window.onload = async function () {
+      try {
+        const response = await fetch(`/quiz/${quizId}`);
+        const quiz = await response.json();
+
+        // 문제와 선택지 설정
+        document.getElementById('question').textContent = quiz.question;
+        const optionsContainer = document.getElementById('options');
+        quiz.options.forEach((option, index) => {
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="radio" name="answer" value="${index + 1}"> ${option}`;
+          optionsContainer.appendChild(label);
+          optionsContainer.appendChild(document.createElement('br'));
+        });
+      } catch (error) {
+        alert("퀴즈 데이터를 불러오는데 실패했습니다.");
+        console.error("Error loading quiz:", error);
+      }
+    };
+
+    // 정답 제출
+    async function submitAnswer() {
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+
+      if (!selectedAnswer) {
+        alert("정답을 선택해주세요!");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/quiz/${quizId}/attempt`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answer: selectedAnswer.value }),
+        });
+        const result = await response.json();
+
+        if (result.correct) {
+          alert("정답입니다! 축하합니다!");
+          window.location.href = 'quizListPage.html'; // 퀴즈 목록 페이지로 이동
+        } else {
+          attempts--;
+          if (attempts > 0) {
+            document.getElementById('feedback').classList.remove('hidden');
+            document.getElementById('attemptsLeft').textContent = attempts;
+          } else {
+            alert("기회를 모두 사용했습니다.");
+            window.location.href = 'wrongPage.html'; // 틀렸을 때 이동
+          }
+        }
+      } catch (error) {
+        alert("정답 확인 중 오류가 발생했습니다.");
+        console.error("Error checking answer:", error);
+      }
+    }
+  </script>
+</body>
+</html>

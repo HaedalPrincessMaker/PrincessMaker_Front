@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 수정</title>
+</head>
+<body>
+  <h1>퀴즈 수정</h1>
+  
+  <form id="quizEditForm">
+    <label for="question">질문:</label>
+    <input type="text" id="question" name="question" required><br><br>
+
+    <label for="answer1">답변 1:</label>
+    <input type="text" id="answer1" name="answer1" required><br><br>
+
+    <label for="answer2">답변 2:</label>
+    <input type="text" id="answer2" name="answer2" required><br><br>
+
+    <label for="answer3">답변 3:</label>
+    <input type="text" id="answer3" name="answer3" required><br><br>
+
+    <label for="answer4">답변 4:</label>
+    <input type="text" id="answer4" name="answer4" required><br><br>
+
+    <label for="answer5">답변 5:</label>
+    <input type="text" id="answer5" name="answer5" required><br><br>
+
+    <label for="correctAnswer">정답 번호:</label>
+    <input type="number" id="correctAnswer" name="correctAnswer" required><br><br>
+
+    <button type="submit">수정</button>
+  </form>
+
+  <script>
+    // URL에서 퀴즈 ID를 가져오기
+    const quizId = new URLSearchParams(window.location.search).get('id');
+
+    // 퀴즈 데이터를 서버에서 가져와서 폼에 채우기
+    async function loadQuizData() {
+      const response = await fetch(`/quiz/${quizId}`); // 퀴즈 ID로 GET 요청
+      const quiz = await response.json(); // 서버에서 받은 JSON 데이터
+
+      // 폼 필드에 데이터 채우기
+      document.getElementById('question').value = quiz.question;
+      document.getElementById('answer1').value = quiz.answers[0];
+      document.getElementById('answer2').value = quiz.answers[1];
+      document.getElementById('answer3').value = quiz.answers[2];
+      document.getElementById('answer4').value = quiz.answers[3];
+      document.getElementById('answer5').value = quiz.answers[4];
+      document.getElementById('correctAnswer').value = quiz.correctAnswer;
+    }
+
+    // 수정된 퀴즈 데이터를 서버로 전송
+    document.getElementById('quizEditForm').addEventListener('submit', async (event) => {
+      event.preventDefault(); // 기본 폼 제출 동작을 막음
+
+      const updatedQuiz = {
+        question: document.getElementById('question').value,
+        answers: [
+          document.getElementById('answer1').value,
+          document.getElementById('answer2').value,
+          document.getElementById('answer3').value,
+          document.getElementById('answer4').value,
+          document.getElementById('answer5').value
+        ],
+        correctAnswer: document.getElementById('correctAnswer').value
+      };
+
+      const response = await fetch(`/quiz/${quizId}`, {
+        method: 'PUT', // PUT 요청으로 수정
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedQuiz)
+      });
+
+      if (response.ok) {
+        alert('퀴즈 수정 완료');
+        window.location.href = 'quizList.html'; // 수정 완료 후 목록 페이지로 이동
+      } else {
+        alert('퀴즈 수정 실패');
+      }
+    });
+
+    // 페이지 로드 시 퀴즈 데이터 채우기
+    window.onload = loadQuizData;
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 생성</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div style="text-align: center;">
+    <h1>퀴즈 추가</h1>
+  </div>
+  
+  <form id="quizForm" style="text-align: center;">
+    <div>
+      <label for="question">질문:</label>
+      <input type="text" id="question" name="question" required>
+    </div>
+    <div>
+      <p>옵션과 정답 선택:</p>
+      <div>
+        <label>
+          옵션 1: <input type="text" id="option1" name="option1" required>
+          <input type="radio" name="correctAnswer" value="1" required> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 2: <input type="text" id="option2" name="option2" required>
+          <input type="radio" name="correctAnswer" value="2"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 3: <input type="text" id="option3" name="option3" required>
+          <input type="radio" name="correctAnswer" value="3"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 4: <input type="text" id="option4" name="option4" required>
+          <input type="radio" name="correctAnswer" value="4"> 정답
+        </label>
+      </div>
+      <div>
+        <label>
+          옵션 5: <input type="text" id="option4" name="option4" required>
+          <input type="radio" name="correctAnswer" value="5"> 정답
+        </label>
+      </div>
+    </div>
+    <button type="submit">퀴즈 추가</button>
+  </form>
+
+  <script>
+    document.getElementById('quizForm').addEventListener('submit', async function (event) {
+      event.preventDefault(); // 기본 동작 중단
+
+      // 폼 데이터 수집
+      const quiz = {
+        question: document.getElementById('question').value,
+        options: [
+          document.getElementById('option1').value,
+          document.getElementById('option2').value,
+          document.getElementById('option3').value,
+          document.getElementById('option4').value,
+          document.getElementById('option4').value
+        ],
+        correctAnswer: document.querySelector('input[name="correctAnswer"]:checked').value
+      };
+
+      // 서버로 전송
+      const response = await fetch('/quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(quiz)
+      });
+
+      if (response.ok) {
+        alert('퀴즈가 추가되었습니다!');
+        window.location.href = 'quizListPage.html'; // 퀴즈 목록으로 이동
+      } else {
+        alert('퀴즈 추가 실패!');
+      }
+    });
+  </script>
+</body>
+</html>

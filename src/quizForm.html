@@ -11,79 +11,78 @@
     <h1>퀴즈 추가</h1>
   </div>
   <div id="quizListContainer" style="text-align: center;">
-  <form id="quizForm" style="text-align: center;">
-    <div>
-      <label class="option" for="question">
-      질문 <input type="text" id="question" name="question" required>
-      </label>
-    </div>
-    <div>
-      <br><br>
+    <form id="quizForm" style="text-align: center;">
       <div>
-        <label class="option">
-          옵션 1 <input type="text" id="option1" name="option1"  required>
-          <input type="radio" name="correctAnswer" value="1" required> 정답
-        </label><br><br>
+        <label class="option" for="question">
+          질문 <input type="text" id="question" name="question" required>
+        </label>
       </div>
       <div>
-        <label class="option">
-          옵션 2 <input type="text" id="option2" name="option2" required>
-          <input type="radio" name="correctAnswer" value="2"> 정답
-        </label><br><br>
+        <br><br>
+        <div>
+          <label class="option">
+            옵션 1 <input type="text" id="option1" name="option1" required>
+            <input type="radio" name="correctAnswer" value="1" required> 정답
+          </label><br><br>
+        </div>
+        <div>
+          <label class="option">
+            옵션 2 <input type="text" id="option2" name="option2" required>
+            <input type="radio" name="correctAnswer" value="2"> 정답
+          </label><br><br>
+        </div>
+        <div>
+          <label class="option">
+            옵션 3 <input type="text" id="option3" name="option3" required>
+            <input type="radio" name="correctAnswer" value="3"> 정답
+          </label><br><br>
+        </div>
+        <div>
+          <label class="option">
+            옵션 4 <input type="text" id="option4" name="option4" required>
+            <input type="radio" name="correctAnswer" value="4"> 정답
+          </label><br><br>
+        </div>
+        <div>
+          <label class="option">
+            옵션 5 <input type="text" id="option5" name="option5" required>
+            <input type="radio" name="correctAnswer" value="5"> 정답
+          </label><br><br>
+        </div>
       </div>
-      <div>
-        <label class="option">
-          옵션 3 <input type="text" id="option3" name="option3" required>
-          <input type="radio" name="correctAnswer" value="3"> 정답
-        </label><br><br>
-      </div>
-      <div>
-        <label class="option">
-          옵션 4 <input type="text" id="option4" name="option4" required>
-          <input type="radio" name="correctAnswer" value="4"> 정답
-        </label><br><br>
-      </div>
-      <div>
-        <label class="option">
-          옵션 5 <input type="text" id="option4" name="option4" required>
-          <input type="radio" name="correctAnswer" value="5"> 정답
-        </label><br><br>
-      </div>
-    </div>
+    </form>
+    <button class="add-button" id="addQuizButton">퀴즈 추가</button>
   </div>
-    <button class="add-button" type="submit">퀴즈 추가</button>
-  </form>
 
   <script>
-    document.getElementById('quizForm').addEventListener('submit', async function (event) {
+    document.getElementById('addQuizButton').addEventListener('click', function (event) {
       event.preventDefault(); // 기본 동작 중단
 
       // 폼 데이터 수집
       const quiz = {
+        id: Date.now(), // 고유 ID는 현재 시간으로 생성
         question: document.getElementById('question').value,
         options: [
           document.getElementById('option1').value,
           document.getElementById('option2').value,
           document.getElementById('option3').value,
           document.getElementById('option4').value,
-          document.getElementById('option4').value
+          document.getElementById('option5').value
         ],
-        correctAnswer: document.querySelector('input[name="correctAnswer"]:checked').value
+        correctAnswer: parseInt(document.querySelector('input[name="correctAnswer"]:checked').value, 10)
       };
 
-      // 서버로 전송
-      const response = await fetch('/quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(quiz)
-      });
+      // 로컬스토리지에서 퀴즈 목록 가져오기
+      let quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
 
-      if (response.ok) {
-        alert('퀴즈가 추가되었습니다!');
-        window.location.href = 'quizListPage.html'; // 퀴즈 목록으로 이동
-      } else {
-        alert('퀴즈 추가 실패!');
-      }
+      // 퀴즈 추가
+      quizzes.push(quiz);
+
+      // 로컬스토리지에 퀴즈 목록 저장
+      localStorage.setItem('quizzes', JSON.stringify(quizzes));
+
+      alert('퀴즈가 추가되었습니다!');
+      window.location.href = 'quizListPage.html'; // 퀴즈 목록 페이지로 이동
     });
   </script>
 </body>

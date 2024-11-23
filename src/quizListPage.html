@@ -8,7 +8,7 @@
 </head>
 <body>
   <div style="text-align: center;">
-    <h1>Quiz 목록</h1>
+    <h1>퀴즈 목록</h1>
   </div>
 
   <div id="quizListContainer" style="text-align: center;">
@@ -20,18 +20,20 @@
   </div>
 
   <script>
-    // 서버에서 퀴즈 목록을 가져오는 함수
-    async function fetchQuizzes() {
-      const response = await fetch('/quiz'); // GET /quiz
-      const quizzes = await response.json();
-      const quizList = document.getElementById('quizList');
+    // 로컬스토리지에서 퀴즈 목록을 가져오는 함수
+    function fetchQuizzes() {
+      const quizzes = JSON.parse(localStorage.getItem('quizzes')) || []; // 로컬스토리지에서 퀴즈 목록을 가져옴
+      renderQuizList(quizzes); // 퀴즈 목록을 렌더링
+    }
 
+    // 퀴즈 목록을 화면에 렌더링
+    function renderQuizList(quizzes) {
+      const quizList = document.getElementById('quizList');
       quizList.innerHTML = ''; // 기존 목록 초기화
 
-      // 퀴즈 목록을 동적으로 생성
       quizzes.forEach(quiz => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `
+        listItem.innerHTML = ` 
           ${quiz.question} 
           <button onclick="editQuiz(${quiz.id})">수정</button>
           <button class="delete-button" onclick="deleteQuiz(${quiz.id})">삭제</button>
@@ -47,18 +49,13 @@
     }
 
     // 퀴즈 삭제
-    async function deleteQuiz(id) {
+    function deleteQuiz(id) {
       if (confirm('정말로 삭제하시겠습니까?')) {
-        const response = await fetch(`/api/quizzes/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (response.ok) {
-          alert('퀴즈가 삭제되었습니다.');
-          fetchQuizzes(); // 목록 다시 불러오기
-        } else {
-          alert('퀴즈 삭제 실패');
-        }
+        let quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+        quizzes = quizzes.filter(quiz => quiz.id !== id); // 삭제할 퀴즈 제외
+        localStorage.setItem('quizzes', JSON.stringify(quizzes)); // 수정된 퀴즈 목록을 로컬스토리지에 저장
+        alert('퀴즈가 삭제되었습니다.');
+        fetchQuizzes(); // 목록 다시 불러오기
       }
     }
 

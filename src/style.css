@@ -45,6 +45,10 @@ body {
   margin-top: 20px;
 }
 
+.edit-button:hover {
+  background-color:#fda0bc;
+}
+
 .submit-button{
   padding: 5px 10px;
   font-size: 18px;
@@ -54,6 +58,25 @@ body {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color:#c5b0e1;
+}
+
+.retry-button{
+  padding: 5px 10px;
+  font-size: 18px;
+  background-color: #f7b708;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.retry-button:hover {
+  background-color:#fcd362;
 }
 
 .message {

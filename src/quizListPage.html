@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>퀴즈 목록</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div style="text-align: center;">
@@ -15,7 +16,7 @@
     <ul id="quizList" style="list-style: none; padding: 0;">
       <!-- 퀴즈 목록이 여기에 추가됩니다 -->
     </ul>
-    <button onclick="location.href='quizForm.html'">퀴즈 추가</button>
+    <button class="add-button" onclick="location.href='quizForm.html'">퀴즈 추가</button>
   </div>
 
   <script>
@@ -33,7 +34,7 @@
         listItem.innerHTML = `
           ${quiz.question} 
           <button onclick="editQuiz(${quiz.id})">수정</button>
-          <button onclick="deleteQuiz(${quiz.id})">삭제</button>
+          <button class="delete-button" onclick="deleteQuiz(${quiz.id})">삭제</button>
         `;
         quizList.appendChild(listItem);
       });

@@ -10,46 +10,48 @@
   <div style="text-align: center;">
     <h1>퀴즈 추가</h1>
   </div>
-  
+  <div id="quizListContainer" style="text-align: center;">
   <form id="quizForm" style="text-align: center;">
     <div>
-      <label for="question">질문:</label>
-      <input type="text" id="question" name="question" required>
+      <label class="option" for="question">
+      질문 <input type="text" id="question" name="question" required>
+      </label>
     </div>
     <div>
-      <p>옵션과 정답 선택:</p>
+      <br><br>
       <div>
-        <label>
-          옵션 1: <input type="text" id="option1" name="option1" required>
+        <label class="option">
+          옵션 1 <input type="text" id="option1" name="option1"  required>
           <input type="radio" name="correctAnswer" value="1" required> 정답
-        </label>
+        </label><br><br>
       </div>
       <div>
-        <label>
-          옵션 2: <input type="text" id="option2" name="option2" required>
+        <label class="option">
+          옵션 2 <input type="text" id="option2" name="option2" required>
           <input type="radio" name="correctAnswer" value="2"> 정답
-        </label>
+        </label><br><br>
       </div>
       <div>
-        <label>
-          옵션 3: <input type="text" id="option3" name="option3" required>
+        <label class="option">
+          옵션 3 <input type="text" id="option3" name="option3" required>
           <input type="radio" name="correctAnswer" value="3"> 정답
-        </label>
+        </label><br><br>
       </div>
       <div>
-        <label>
-          옵션 4: <input type="text" id="option4" name="option4" required>
+        <label class="option">
+          옵션 4 <input type="text" id="option4" name="option4" required>
           <input type="radio" name="correctAnswer" value="4"> 정답
-        </label>
+        </label><br><br>
       </div>
       <div>
-        <label>
-          옵션 5: <input type="text" id="option4" name="option4" required>
+        <label class="option">
+          옵션 5 <input type="text" id="option4" name="option4" required>
           <input type="radio" name="correctAnswer" value="5"> 정답
-        </label>
+        </label><br><br>
       </div>
     </div>
-    <button type="submit">퀴즈 추가</button>
+  </div>
+    <button class="add-button" type="submit">퀴즈 추가</button>
   </form>
 
   <script>

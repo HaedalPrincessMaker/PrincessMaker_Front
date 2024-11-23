@@ -124,6 +124,7 @@ label {
   background-color: #d7d6d6; /* 연한 배경색 */
   text-align: left;
 }
+
 .quiz-item:hover {
   background-color: #e8e8e8; /* 호버 시 약간 밝아지는 효과 */
 }
